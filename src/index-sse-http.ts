@@ -130,7 +130,30 @@ function getServer(username: string | undefined, password: string | undefined): 
 
 // Create Express application
 const app = express();
+
+// Enable CORS for all routes
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, mcp-session-id');
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
+
 app.use(express.json());
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    service: 'DataForSEO MCP Server (SSE)',
+    version: process.env.npm_package_version || 'unknown'
+  });
+});
 
 // Basic Auth Middleware
 const basicAuth = (req: Request, res: Response, next: NextFunction) => {
@@ -385,8 +408,9 @@ app.post("/messages", basicAuth, async (req: Request, res: Response) => {
 
 // Start the server
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
-const server = app.listen(PORT, () => {
-  console.log(`DataForSEO MCP Server with SSE compatibility listening on port ${PORT}`);
+const HOST = process.env.HOST || '0.0.0.0';
+const server = app.listen(PORT, HOST, () => {
+  console.log(`DataForSEO MCP Server with SSE compatibility listening on ${HOST}:${PORT}`);
   console.log(`
 ==============================================
 SUPPORTED TRANSPORT OPTIONS:
