@@ -1,0 +1,12 @@
+
+> dataforseo-mcp-server@2.2.6 http
+> node build/index-http.js
+
+Starting DataForSEO MCP Server...
+Starting server on 0.0.0.0:3000...
+Environment: NODE_ENV=undefined
+Port from env: undefined (Render assigns this automatically)
+Host from env: 0.0.0.0
+✅ MCP Stateless Streamable HTTP Server listening on 0.0.0.0:3000
+🏥 Health check available at: http://0.0.0.0:3000/health
+🚀 Server is ready to accept connections

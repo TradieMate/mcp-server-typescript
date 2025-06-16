@@ -295,7 +295,8 @@ async function main() {
   
   console.log(`Starting server on ${HOST}:${PORT}...`);
   console.log(`Environment: NODE_ENV=${process.env.NODE_ENV}`);
-  console.log(`Port from env: ${process.env.PORT}`);
+  console.log(`Port from env: ${process.env.PORT} (Render assigns this automatically)`);
+  console.log(`Host from env: ${process.env.HOST}`);
   
   const server = app.listen(PORT, HOST, () => {
     console.log(`✅ MCP Stateless Streamable HTTP Server listening on ${HOST}:${PORT}`);
