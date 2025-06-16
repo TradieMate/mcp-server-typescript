@@ -147,6 +147,16 @@ async function main() {
   
   app.use(express.json());
 
+  // Root endpoint for quick connectivity check
+  app.get('/', (req, res) => {
+    res.status(200).json({
+      message: 'DataForSEO MCP Server is running',
+      service: 'DataForSEO MCP Server (HTTP)',
+      version: process.env.npm_package_version || 'unknown',
+      timestamp: new Date().toISOString()
+    });
+  });
+
   // Health check endpoint
   app.get('/health', (req, res) => {
     res.status(200).json({
@@ -282,8 +292,20 @@ async function main() {
   // Start the server
   const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
   const HOST = process.env.HOST || '0.0.0.0';
-  app.listen(PORT, HOST, () => {
-    console.log(`MCP Stateless Streamable HTTP Server listening on ${HOST}:${PORT}`);
+  
+  console.log(`Starting server on ${HOST}:${PORT}...`);
+  console.log(`Environment: NODE_ENV=${process.env.NODE_ENV}`);
+  console.log(`Port from env: ${process.env.PORT}`);
+  
+  const server = app.listen(PORT, HOST, () => {
+    console.log(`✅ MCP Stateless Streamable HTTP Server listening on ${HOST}:${PORT}`);
+    console.log(`🏥 Health check available at: http://${HOST}:${PORT}/health`);
+    console.log(`🚀 Server is ready to accept connections`);
+  });
+  
+  server.on('error', (error) => {
+    console.error('❌ Server error:', error);
+    process.exit(1);
   });
 }
 
