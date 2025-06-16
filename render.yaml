@@ -11,6 +11,8 @@ services:
         value: production
       - key: HOST
         value: 0.0.0.0
+      - key: PORT
+        value: 10000
       - key: DATAFORSEO_USERNAME
         sync: false
       - key: DATAFORSEO_PASSWORD
