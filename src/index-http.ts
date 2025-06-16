@@ -132,7 +132,30 @@ function getSessionId() {
 
 async function main() {
   const app = express();
+  
+  // Enable CORS for all routes
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, mcp-session-id');
+    if (req.method === 'OPTIONS') {
+      res.sendStatus(200);
+    } else {
+      next();
+    }
+  });
+  
   app.use(express.json());
+
+  // Health check endpoint
+  app.get('/health', (req, res) => {
+    res.status(200).json({
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      service: 'DataForSEO MCP Server (HTTP)',
+      version: process.env.npm_package_version || 'unknown'
+    });
+  });
 
   // Basic Auth Middleware
   const basicAuth = (req: Request, res: Response, next: NextFunction) => {
@@ -258,8 +281,9 @@ async function main() {
 
   // Start the server
   const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
-  app.listen(PORT, () => {
-    console.log(`MCP Stateless Streamable HTTP Server listening on port ${PORT}`);
+  const HOST = process.env.HOST || '0.0.0.0';
+  app.listen(PORT, HOST, () => {
+    console.log(`MCP Stateless Streamable HTTP Server listening on ${HOST}:${PORT}`);
   });
 }
 

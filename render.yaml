@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: dataforseo-mcp-server
+    env: node
+    plan: starter
+    buildCommand: npm install && npm run build
+    startCommand: npm run http
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: DATAFORSEO_USERNAME
+        sync: false
+      - key: DATAFORSEO_PASSWORD
+        sync: false
+      - key: ENABLED_MODULES
+        value: SERP,KEYWORDS_DATA,ONPAGE,DATAFORSEO_LABS,BACKLINKS,BUSINESS_DATA,DOMAIN_ANALYTICS
+      - key: DATAFORSEO_FULL_RESPONSE
+        value: false
